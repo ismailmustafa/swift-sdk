@@ -122,7 +122,7 @@ open class DefaultEventDispatcher: BackgroundingCallbacks, OPTEventDispatcher {
     let notify = DispatchGroup()
     
     open func flushEvents() {
-        dispatcher.sync {
+        dispatcher.async {
             // we don't remove anthing off of the queue unless it is successfully sent.
             var failureCount = 0
             
@@ -232,12 +232,10 @@ open class DefaultEventDispatcher: BackgroundingCallbacks, OPTEventDispatcher {
             guard self.timer.property == nil else { return }
             
             self.timer.property = Timer.scheduledTimer(withTimeInterval: self.timerInterval, repeats: true) { _ in
-                self.dispatcher.async {
-                    if self.dataStore.count > 0 {
-                        self.flushEvents()
-                    } else {
-                        self.stopTimer()
-                    }
+                if self.dataStore.count > 0 {
+                    self.flushEvents()
+                } else {
+                    self.stopTimer()
                 }
             }
         }
