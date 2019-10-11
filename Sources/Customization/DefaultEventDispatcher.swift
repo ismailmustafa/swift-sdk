@@ -122,7 +122,7 @@ open class DefaultEventDispatcher: BackgroundingCallbacks, OPTEventDispatcher {
     let notify = DispatchGroup()
     
     open func flushEvents() {
-        dispatcher.async {
+        dispatcher.sync {
             // we don't remove anthing off of the queue unless it is successfully sent.
             var failureCount = 0
             
