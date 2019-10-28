@@ -160,6 +160,10 @@ extension HandlerRegistryService {
         return injectComponent(service: OPTDecisionService.self, sdkKey: sdkKey, isReintialize: isReintialize) as! OPTDecisionService?
     }
 
+    func injectEventProcessor(sdkKey: String? = nil, isReintialize: Bool=false) -> OPTEventProcessor? {
+        return injectComponent(service: OPTEventProcessor.self, sdkKey: sdkKey, isReintialize: isReintialize) as! OPTEventProcessor?
+    }
+    
     func injectEventDispatcher(sdkKey: String? = nil, isReintialize: Bool=false) -> OPTEventDispatcher? {
         return injectComponent(service: OPTEventDispatcher.self, sdkKey: sdkKey, isReintialize: isReintialize) as! OPTEventDispatcher?
     }

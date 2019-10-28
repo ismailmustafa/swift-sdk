@@ -16,7 +16,7 @@
 
 import XCTest
 
-class EventDispatcherTests_Batch: XCTestCase {
+class EventDispatcherTests_Batch_Legacy: XCTestCase {
     
     let kAccountId = "11111"
     let kClientVersion = "3.1.2"
@@ -42,9 +42,9 @@ class EventDispatcherTests_Batch: XCTestCase {
     
     var eventDispatcher: TestEventDispatcher!
     
-    static let keyTestEventFileName = "OPTEventQueue-Test-"
+    static let keyTestEventFileName = "EventDispatcherTests-Batch-Legacy---"
     var uniqueFileName: String {
-        return EventDispatcherTests_Batch.keyTestEventFileName + String(Int.random(in: 0...1000000))
+        return EventDispatcherTests_Batch_Legacy.keyTestEventFileName + String(Int.random(in: 0...1000000))
     }
     
     override func setUp() {
@@ -54,6 +54,8 @@ class EventDispatcherTests_Batch: XCTestCase {
         
         self.eventDispatcher = TestEventDispatcher(eventFileName: uniqueFileName)
         
+        HandlerRegistryService.shared.binders.property?.removeAll()
+
         // for debug level setting
         _ = OptimizelyClient(sdkKey: "any", eventDispatcher: eventDispatcher, defaultLogLevel: .debug)
         
@@ -90,7 +92,7 @@ class EventDispatcherTests_Batch: XCTestCase {
 
 // MAKR: - Configuration
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
     
     func testInitialization() {
         let expBatchSize = 12
@@ -132,7 +134,7 @@ extension EventDispatcherTests_Batch {
 
 // MARK: - Batch
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
     
     func testEmptyEventBatch() {
         let events = [EventForDispatch]()
@@ -332,7 +334,7 @@ extension EventDispatcherTests_Batch {
 
 // MARK: - FlushEvents
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
 
     func testFlushEvents() {
         // this tests timer-based dispatch, available for iOS 10+
@@ -376,7 +378,7 @@ extension EventDispatcherTests_Batch {
         dispatchMultipleEvents([(kUrlA, batchEventA),
                                 (kUrlA, batchEventA),
                                 (kUrlB, batchEventB)])
-            
+        
         eventDispatcher.close()
 
         XCTAssertEqual(eventDispatcher.sendRequestedEvents.count, 2, "different urls should not be batched")
@@ -513,7 +515,7 @@ extension EventDispatcherTests_Batch {
 
 // MARK: - FlushEvents on Timer
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
 
     func testEventDispatchedOnTimer() {
         // this tests timer-based dispatch, available for iOS 10+
@@ -534,7 +536,7 @@ extension EventDispatcherTests_Batch {
 
         wait(for: [eventDispatcher.exp!], timeout: 10)
         
-        XCTAssertEqual(eventDispatcher.sendRequestedEvents.count, 1)
+        XCTAssertEqual(eventDispatcher.sendRequestedEvents.count, 1, "expection hit on one batch with 2 events")
 
         let batch = eventDispatcher.sendRequestedEvents[0]
         let batchedEvents = try! JSONDecoder().decode(BatchEvent.self, from: batch.body)
@@ -654,7 +656,7 @@ extension EventDispatcherTests_Batch {
 
 // MARK: - FlushEvents other than timer
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
     
     func testEventsFlushedOnEventQueueSizeHit() {
         // this tests timer-based dispatch, available for iOS 10+
@@ -831,7 +833,7 @@ extension EventDispatcherTests_Batch {
 
 // MARK: - LogEvent Notification
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
 
     func testLogEventNotificationCalledBeforeBatchSent() {
         eventDispatcher.timerInterval = 0   // no batch
@@ -870,7 +872,7 @@ extension EventDispatcherTests_Batch {
 
 // MARK: - iOS9 Devices
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
     
     func testFlushEventsForIOS9Only() {
         // this tests iOS9 (no-timer)
@@ -916,9 +918,9 @@ extension EventDispatcherTests_Batch {
 
 // MARK: - OptimizleyClient: Close()
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
     
-    func testCloseForOptimizleyClinet() {
+    func testCloseForOptimizleyClient() {
         // this tests timer-based dispatch, available for iOS 10+
         guard #available(iOS 10.0, tvOS 10.0, *) else { return }
         
@@ -984,7 +986,7 @@ extension EventDispatcherTests_Batch {
 
 // MARK: - Random testing
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
     
     func testRandomEvents_10() {
         runRandomEventsTest(numEvents: 9, eventDispatcher: eventDispatcher, tc: self)
@@ -1073,7 +1075,7 @@ extension EventDispatcherTests_Batch {
 
 // MARK: - Utils
 
-extension EventDispatcherTests_Batch {
+extension EventDispatcherTests_Batch_Legacy {
     
     func makeEventForDispatch(url: String, event: BatchEvent) -> EventForDispatch {
         let data = try! JSONEncoder().encode(event)
