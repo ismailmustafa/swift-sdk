@@ -4851,7 +4851,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.13.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.optimizely.OptimizelySwiftSDK;
 				PRODUCT_NAME = Optimizely;
 				SDKROOT = macosx;
@@ -4882,7 +4882,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.13.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.optimizely.OptimizelySwiftSDK;
 				PRODUCT_NAME = Optimizely;
 				SDKROOT = macosx;
